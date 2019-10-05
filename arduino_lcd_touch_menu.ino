@@ -65,53 +65,43 @@ extern unsigned int arrow_right[0x866];
 // Function for drawing right button
 void rightButton()
 {
-  myGLCD.setColor(0, 0, 255);
-  myGLCD.fillRoundRect (170, 180, 310, 230);
   myGLCD.setColor(255, 255, 255);
-  myGLCD.drawRoundRect (170, 180, 310, 230);
-  myGLCD.setBackColor(0, 0, 255);
-  myGLCD.print(">", 250, 197);
-  myGLCD.drawLine(230, 204, 260, 204);
-  myGLCD.drawLine(230, 205, 260, 205);
+  myGLCD.drawRoundRect (228, 180, 310, 230);
+  myGLCD.drawBitmap(246, 185, 50, 42, arrow_right);
 }
 
 // Function for drawing left button
 void leftButton()
 {
-  myGLCD.setColor(0, 0, 255);
-  myGLCD.fillRoundRect (10, 180, 150, 230);
   myGLCD.setColor(255, 255, 255);
-  myGLCD.drawRoundRect (10, 180, 150, 230);
-  myGLCD.setBackColor(0, 0, 255);
-  myGLCD.print("<", 55, 197);
-  myGLCD.drawLine(60, 204, 90, 204);
-  myGLCD.drawLine(60, 205, 90, 205);
+  myGLCD.drawRoundRect (10, 180, 92, 230);
+  myGLCD.drawBitmap(25, 185, 50, 42, arrow_left);
 }
 
 // Function for drawing red button outline during the butten is pressed
 void rightRedButton()
 {
   myGLCD.setColor(255, 0, 0);
-  myGLCD.drawRoundRect (170, 180, 310, 230);
+  myGLCD.drawRoundRect (228, 180, 310, 230);
   while (myTouch.dataAvailable())
   {
     myTouch.read();
   }
   myGLCD.setColor(255, 255, 255);
-  myGLCD.drawRoundRect (170, 180, 310, 230);
+  myGLCD.drawRoundRect (228, 180, 310, 230);
 }
 
 // Function for drawing red button outline during the butten is pressed
 void leftRedButton()
 {
   myGLCD.setColor(255, 0, 0);
-  myGLCD.drawRoundRect (10, 180, 150, 230);
+  myGLCD.drawRoundRect (10, 180, 92, 230);
   while (myTouch.dataAvailable())
   {
     myTouch.read();
   }
   myGLCD.setColor(255, 255, 255);
-  myGLCD.drawRoundRect (10, 180, 150, 230);
+  myGLCD.drawRoundRect (10, 180, 92, 230);
 }
 
 void homeScreen()
