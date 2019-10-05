@@ -57,6 +57,10 @@ int x_touch, y_touch;
 // Icon
 extern unsigned int arrow_left[0x834];
 extern unsigned int arrow_right[0x866];
+extern unsigned int home_icon[0x1254];
+extern unsigned int temp_icon[0x1254];
+extern unsigned int clock_icon[0x1210];
+extern unsigned int currency_icon[0x1254];
 
 /*************************
 **   Custom functions   **
@@ -111,6 +115,7 @@ void homeScreen()
   myGLCD.setBackColor(VGA_SILVER);
   myGLCD.setColor(VGA_BLACK);
   myGLCD.print("HOME", 130, 7);
+  myGLCD.drawBitmap(10, 70, 69, 68, home_icon);
 }
 
 void tempScreen()
@@ -120,6 +125,7 @@ void tempScreen()
   myGLCD.setBackColor(VGA_SILVER);
   myGLCD.setColor(VGA_BLACK);
   myGLCD.print("TEMPERATURE", 80, 7);
+  myGLCD.drawBitmap(10, 70, 69, 68, temp_icon);
 }
 
 void clockScreen()
@@ -129,6 +135,7 @@ void clockScreen()
   myGLCD.setBackColor(VGA_SILVER);
   myGLCD.setColor(VGA_BLACK);
   myGLCD.print("CLOCK", 120, 7);
+  myGLCD.drawBitmap(10, 70, 68, 68, clock_icon);
 }
 
 void currencyScreen()
@@ -138,6 +145,7 @@ void currencyScreen()
   myGLCD.setBackColor(VGA_SILVER);
   myGLCD.setColor(VGA_BLACK);
   myGLCD.print("CURRENCY", 100, 7);
+  myGLCD.drawBitmap(10, 70, 69, 68, currency_icon);
 }
 
 // Collection of all screens
