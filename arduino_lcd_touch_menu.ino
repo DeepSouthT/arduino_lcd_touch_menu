@@ -50,17 +50,22 @@ URTouch  myTouch( 6, 5, 4, 3, 2);
 
 // Declare which fonts we will be using
 extern uint8_t BigFont[];
+extern uint8_t SevenSegNumFont[];
 
 // Variables for the touch coordinates
 int x_touch, y_touch;
 
 // Icon
 extern unsigned int arrow_left[0x834];
-extern unsigned int arrow_right[0x866];
+extern unsigned int arrow_right[0x834];
 extern unsigned int home_icon[0x1254];
 extern unsigned int temp_icon[0x1254];
 extern unsigned int clock_icon[0x1210];
 extern unsigned int currency_icon[0x1254];
+extern unsigned int semicolon[0x172];
+extern unsigned int centigrade[0x60C];
+extern unsigned int german[0xB6C];
+extern unsigned int canada[0xB41];
 
 /*************************
 **   Custom functions   **
@@ -112,9 +117,25 @@ void homeScreen()
 {
   myGLCD.setColor(VGA_SILVER);
   myGLCD.fillRect (0, 0, 319, 30);
+  
   myGLCD.setBackColor(VGA_SILVER);
   myGLCD.setColor(VGA_BLACK);
+  myGLCD.setFont(BigFont);
   myGLCD.print("HOME", 130, 7);
+
+  myGLCD.setColor(VGA_BLACK);
+  myGLCD.fillRect (85, 31, 319, 179);
+
+  myGLCD.setColor(VGA_WHITE);
+  myGLCD.setBackColor(VGA_BLACK);
+  myGLCD.setFont(SevenSegNumFont);
+  myGLCD.print("10", 130, 55);
+  myGLCD.drawBitmap(200, 60, 10, 37, semicolon);
+  myGLCD.print("10", 209, 55);
+
+  myGLCD.setFont(BigFont);
+  myGLCD.print("01.10.2019", 130, 120);
+  
   myGLCD.drawBitmap(10, 70, 69, 68, home_icon);
 }
 
@@ -124,8 +145,18 @@ void tempScreen()
   myGLCD.fillRect (0, 0, 319, 30);
   myGLCD.setBackColor(VGA_SILVER);
   myGLCD.setColor(VGA_BLACK);
+  myGLCD.setFont(BigFont);
   myGLCD.print("TEMPERATURE", 80, 7);
   myGLCD.drawBitmap(10, 70, 69, 68, temp_icon);
+
+  myGLCD.setColor(VGA_BLACK);
+  myGLCD.fillRect (85, 31, 319, 179);
+
+  myGLCD.setColor(VGA_WHITE);
+  myGLCD.setBackColor(VGA_BLACK);
+  myGLCD.setFont(SevenSegNumFont);
+  myGLCD.print("22", 130, 55);
+  myGLCD.drawBitmap(200, 60, 36, 43, centigrade);
 }
 
 void clockScreen()
@@ -134,8 +165,22 @@ void clockScreen()
   myGLCD.fillRect (0, 0, 319, 30);
   myGLCD.setBackColor(VGA_SILVER);
   myGLCD.setColor(VGA_BLACK);
+  myGLCD.setFont(BigFont);
   myGLCD.print("CLOCK", 120, 7);
   myGLCD.drawBitmap(10, 70, 68, 68, clock_icon);
+
+  myGLCD.setColor(VGA_BLACK);
+  myGLCD.fillRect (85, 31, 319, 179);
+
+  myGLCD.drawBitmap(130, 55, 68, 43, german);
+  //myGLCD.drawBitmap(130, 55, 67, 43, canada);
+  //myGLCD.setColor(VGA_WHITE);
+  //myGLCD.setFont(BigFont);
+  //myGLCD.print("10:10", 200, 60);
+
+  //myGLCD.drawBitmap(130, 120, 67, 43, canada);
+  //myGLCD.drawBitmap(130, 120, 67, 43, canada);
+  //myGLCD.print("10:10", 200, 120);
 }
 
 void currencyScreen()
@@ -144,6 +189,7 @@ void currencyScreen()
   myGLCD.fillRect (0, 0, 319, 30);
   myGLCD.setBackColor(VGA_SILVER);
   myGLCD.setColor(VGA_BLACK);
+  myGLCD.setFont(BigFont);
   myGLCD.print("CURRENCY", 100, 7);
   myGLCD.drawBitmap(10, 70, 69, 68, currency_icon);
 }
