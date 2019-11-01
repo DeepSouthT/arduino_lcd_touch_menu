@@ -35,12 +35,11 @@
  *     0.1 > Basic menu with four screens (no image)
  *     0.2 > Basic menu with four screens with image
  *     
- * Last modified: 19.10.2019
+ * Last modified: 10.11.2019
  *******************************/
 
 #include <UTFT.h>
 #include <URTouch.h>
-#include <MemoryFree.h>
 
 // Initialize display
 // ------------------
@@ -59,12 +58,12 @@ extern uint8_t SevenSegNumFont[];
 int x_touch, y_touch;
 
 // Icon
-extern unsigned int arrow_left[0x834];
-extern unsigned int arrow_right[0x834];
-extern unsigned int home_icon[0x1254];
+extern unsigned int arrowHeadR[0x23F];
+extern unsigned int arrowHeadL[0x23F];
+extern unsigned int house[0x866];
 extern unsigned int temp_icon[0x1254];
-extern unsigned int clock_icon[0x1210];
-extern unsigned int currency_icon[0x1254];
+extern unsigned int clockNeedle[0x9C4];
+extern unsigned int doller[0x834];
 extern unsigned int semicolon[0x172];
 extern unsigned int centigrade[0x60C];
 extern unsigned int german[0xB6C];
@@ -79,10 +78,10 @@ void rightButton()
 {
   myGLCD.setColor(255, 255, 255);
   myGLCD.drawRoundRect (228, 180, 310, 230);
-  myGLCD.drawBitmap(246, 185, 50, 42, arrow_right);
+  myGLCD.drawBitmap(265, 194, 25, 23, arrowHeadR);
 
-  Serial.println("rightButton done");
-  Serial.println(freeMemory());
+  myGLCD.setColor(10, 116, 255);
+  myGLCD.fillRect (240, 200, 265, 210);
 }
 
 // Function for drawing left button
@@ -90,10 +89,10 @@ void leftButton()
 {
   myGLCD.setColor(255, 255, 255);
   myGLCD.drawRoundRect (10, 180, 92, 230);
-  myGLCD.drawBitmap(25, 185, 50, 42, arrow_left);
+  myGLCD.drawBitmap(25, 194, 25, 23, arrowHeadL);
 
-  Serial.println("leftButton done");
-  Serial.println(freeMemory());
+  myGLCD.setColor(10, 116, 255);
+  myGLCD.fillRect (50, 200, 75, 210);
 }
 
 // Function for drawing red button outline during the butten is pressed
@@ -101,15 +100,13 @@ void rightRedButton()
 {
   myGLCD.setColor(255, 0, 0);
   myGLCD.drawRoundRect (228, 180, 310, 230);
+  delay(150);
   while (myTouch.dataAvailable())
   {
     myTouch.read();
   }
   myGLCD.setColor(255, 255, 255);
   myGLCD.drawRoundRect (228, 180, 310, 230);
-
-  Serial.println("rightRedButton done");
-  Serial.println(freeMemory());
 }
 
 // Function for drawing red button outline during the butten is pressed
@@ -117,15 +114,13 @@ void leftRedButton()
 {
   myGLCD.setColor(255, 0, 0);
   myGLCD.drawRoundRect (10, 180, 92, 230);
+  delay(150);
   while (myTouch.dataAvailable())
   {
     myTouch.read();
   }
   myGLCD.setColor(255, 255, 255);
   myGLCD.drawRoundRect (10, 180, 92, 230);
-
-  Serial.println("leftRedButton done");
-  Serial.println(freeMemory());
 }
 
 void homeScreen()
@@ -150,11 +145,10 @@ void homeScreen()
 
   myGLCD.setFont(BigFont);
   myGLCD.print("01.10.2019", 130, 120);
-  
-  myGLCD.drawBitmap(10, 70, 69, 68, home_icon);
 
-  Serial.println("homeScreen done");
-  Serial.println(freeMemory());
+  myGLCD.setColor(VGA_BLACK);
+  myGLCD.fillRect (10, 70, 79, 138);
+  myGLCD.drawBitmap(20, 85, 50, 43, house);
 }
 
 void tempScreen()
@@ -165,6 +159,9 @@ void tempScreen()
   myGLCD.setColor(VGA_BLACK);
   myGLCD.setFont(BigFont);
   myGLCD.print("TEMPERATURE", 80, 7);
+
+  myGLCD.setColor(VGA_BLACK);
+  myGLCD.fillRect (10, 70, 79, 138);
   myGLCD.drawBitmap(10, 70, 69, 68, temp_icon);
 
   myGLCD.setColor(VGA_BLACK);
@@ -175,9 +172,6 @@ void tempScreen()
   myGLCD.setFont(SevenSegNumFont);
   myGLCD.print("22", 130, 55);
   myGLCD.drawBitmap(200, 60, 36, 43, centigrade);
-
-  Serial.println("tempScreen done");
-  Serial.println(freeMemory());
 }
 
 void clockScreen()
@@ -188,7 +182,10 @@ void clockScreen()
   myGLCD.setColor(VGA_BLACK);
   myGLCD.setFont(BigFont);
   myGLCD.print("CLOCK", 120, 7);
-  myGLCD.drawBitmap(10, 70, 68, 68, clock_icon);
+
+  myGLCD.setColor(VGA_BLACK);
+  myGLCD.fillRect (10, 70, 79, 138);
+  myGLCD.drawBitmap(20, 80, 50, 50, clockNeedle);
 
   myGLCD.setColor(VGA_BLACK);
   myGLCD.fillRect (85, 31, 319, 179);
@@ -201,9 +198,6 @@ void clockScreen()
 
   myGLCD.drawBitmap(130, 120, 67, 43, canada);
   myGLCD.print("XX", 210, 120);
-
-  Serial.println("clockScreen done");
-  Serial.println(freeMemory());
 }
 
 void currencyScreen()
@@ -214,10 +208,10 @@ void currencyScreen()
   myGLCD.setColor(VGA_BLACK);
   myGLCD.setFont(BigFont);
   myGLCD.print("CURRENCY", 100, 7);
-  myGLCD.drawBitmap(10, 70, 69, 68, currency_icon);
 
-  Serial.println("currencyScreen done");
-  Serial.println(freeMemory());
+  myGLCD.setColor(VGA_BLACK);
+  myGLCD.fillRect (10, 70, 79, 138);
+  myGLCD.drawBitmap(28, 75, 35, 60, doller);
 }
 
 // Collection of all screens
@@ -258,9 +252,6 @@ void stateChange(int input)
     Serial.println("??");
     Serial.println(stateActiveIndex);
   }
-
-  Serial.println("stateChange done");
-  Serial.println(freeMemory());
 }
 
 /*************************
@@ -272,7 +263,6 @@ void setup() {
   // initialize serial communication at 9600 bits per second:
   Serial.begin(9600);
   Serial.println("Started");
-  Serial.println(freeMemory());
   
   // Initial setup
   myGLCD.InitLCD();
@@ -292,21 +282,9 @@ void setup() {
   // Static screen areas
   rightButton();
   leftButton();
-
-  Serial.println("Setup done");
-  Serial.println(freeMemory());
 }
 
-unsigned int tstLoopStarted = 0;
-
 void loop() {
-
-  if (tstLoopStarted == 0)
-  {
-    Serial.println("Loop started");
-    Serial.println(freeMemory());
-    tstLoopStarted++;
-  }
 
   if (myTouch.dataAvailable())
     {
@@ -316,8 +294,6 @@ void loop() {
 
       if((y_touch > 180) && (y_touch < 230)) // Lower buttons
       {
-        Serial.println("Lower button active");
-        Serial.println(freeMemory());
         
         if((x_touch > 10) && (x_touch < 150)) // Left button
         {
