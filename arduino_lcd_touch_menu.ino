@@ -41,6 +41,8 @@
 #include <UTFT.h>
 #include <URTouch.h>
 
+#include "statusbar.h"
+
 // Initialize display
 // ------------------
 //UTFT myGLCD(ILI9341_16, 38, 39, 40, 41);
@@ -49,6 +51,8 @@ UTFT myGLCD(ITDB32S_V2, 38, 39, 40, 41);
 // Initialize touchscreen
 // ----------------------
 URTouch  myTouch( 6, 5, 4, 3, 2);
+
+statusbar statusbar_obj(myGLCD);
 
 // Declare which fonts we will be using
 extern uint8_t BigFont[];
@@ -68,10 +72,27 @@ extern unsigned int semicolon[0x172];
 extern unsigned int centigrade[0x60C];
 extern unsigned int german[0xB6C];
 extern unsigned int canada[0xB41];
+extern unsigned int settings[0xAF9];
 
 /*************************
 **   Custom functions   **
 *************************/
+
+// Function for drawing initial static areas
+void initStaticArea(void)
+{
+  statusbar_obj.drawStatusbar();
+
+  myGLCD.setColor(VGA_BLACK);
+  myGLCD.fillRect (0, 31, 319, 239);
+}
+
+// Function for clearing the complete menu area
+void clearMenuArea(void)
+{
+  myGLCD.setColor(VGA_BLACK);
+  myGLCD.fillRect (0, 31, 319, 179);
+}
 
 // Function for drawing right button
 void rightButton()
@@ -123,19 +144,21 @@ void leftRedButton()
   myGLCD.drawRoundRect (10, 180, 92, 230);
 }
 
+// Function for drawing settings button
+void settingsButton()
+{
+  myGLCD.setColor(255, 255, 255);
+  myGLCD.drawRoundRect (165, 180, 267, 230);
+  myGLCD.drawBitmap(195, 190, 53, 53, settings);
+
+  // myGLCD.setColor(10, 116, 255);
+  // myGLCD.fillRect (187, 200, 205, 210);
+}
+
 void homeScreen()
 {
-  myGLCD.setColor(VGA_SILVER);
-  myGLCD.fillRect (0, 0, 319, 30);
+  clearMenuArea();
   
-  myGLCD.setBackColor(VGA_SILVER);
-  myGLCD.setColor(VGA_BLACK);
-  myGLCD.setFont(BigFont);
-  myGLCD.print("HOME", 130, 7);
-
-  myGLCD.setColor(VGA_BLACK);
-  myGLCD.fillRect (85, 31, 319, 179);
-
   myGLCD.setColor(VGA_WHITE);
   myGLCD.setBackColor(VGA_BLACK);
   myGLCD.setFont(SevenSegNumFont);
@@ -153,15 +176,8 @@ void homeScreen()
 
 void tempScreen()
 {
-  myGLCD.setColor(VGA_SILVER);
-  myGLCD.fillRect (0, 0, 319, 30);
-  myGLCD.setBackColor(VGA_SILVER);
-  myGLCD.setColor(VGA_BLACK);
-  myGLCD.setFont(BigFont);
-  myGLCD.print("TEMPERATURE", 80, 7);
-
-  myGLCD.setColor(VGA_BLACK);
-  myGLCD.fillRect (10, 70, 79, 138);
+  clearMenuArea();
+  
   myGLCD.drawBitmap(10, 70, 69, 68, temp_icon);
 
   myGLCD.setColor(VGA_BLACK);
@@ -176,15 +192,8 @@ void tempScreen()
 
 void clockScreen()
 {
-  myGLCD.setColor(VGA_SILVER);
-  myGLCD.fillRect (0, 0, 319, 30);
-  myGLCD.setBackColor(VGA_SILVER);
-  myGLCD.setColor(VGA_BLACK);
-  myGLCD.setFont(BigFont);
-  myGLCD.print("CLOCK", 120, 7);
-
-  myGLCD.setColor(VGA_BLACK);
-  myGLCD.fillRect (10, 70, 79, 138);
+  clearMenuArea();
+  
   myGLCD.drawBitmap(20, 80, 50, 50, clockNeedle);
 
   myGLCD.setColor(VGA_BLACK);
@@ -202,15 +211,8 @@ void clockScreen()
 
 void currencyScreen()
 {
-  myGLCD.setColor(VGA_SILVER);
-  myGLCD.fillRect (0, 0, 319, 30);
-  myGLCD.setBackColor(VGA_SILVER);
-  myGLCD.setColor(VGA_BLACK);
-  myGLCD.setFont(BigFont);
-  myGLCD.print("CURRENCY", 100, 7);
-
-  myGLCD.setColor(VGA_BLACK);
-  myGLCD.fillRect (10, 70, 79, 138);
+  clearMenuArea();
+  
   myGLCD.drawBitmap(28, 75, 35, 60, doller);
 }
 
@@ -276,11 +278,15 @@ void setup() {
 
   myGLCD.setBrightness(16); // default/max is 16
 
+  // Initialize static areas
+  initStaticArea();
+  
   // Start screen
   homeScreen();
 
   // Static screen areas
   rightButton();
+  settingsButton();
   leftButton();
 }
 
