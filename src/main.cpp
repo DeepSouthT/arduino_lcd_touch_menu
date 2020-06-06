@@ -5,15 +5,16 @@
  * Author : DeepSouthT
  *
  * Used:
- *    IC > ATMega2560
- *    IDE > Arduino 1.8.10
- *    Programmer > Arduino
- *    Arduino Mega 2560
- *    ITDB02-3.2S V2 (AptoFun TFT 3.2 TFT LCD Touch) / TFT_320QVT_9341
- *    AptoFun TFT 3.2 Shield for 5v to 3.3v level shift
+ *    IC              > ATMega2560
+ *    Board           > Arduino Mega 2560
+ *    IDE             > Visual Studio Code 1.45.1
+ *    PlugIn          > PlatformIo 1.3.0
+ *    Programmer      > Arduino
+ *    Display         > ITDB02-3.2S V2 (AptoFun TFT 3.2 TFT LCD Touch) / TFT_320QVT_9341
+ *    Display adapter > AptoFun TFT 3.2 Shield for 5v to 3.3v level shift
  * 
  * Description:
- *     Test application for multilevel menu tree
+ *     Sample application for multilevel menu tree
  *     
  *     ITDB02-3.2S V2 module is 3.2" TFT LCD with 65K color 320 x 240 resolutions
  *     The controller of this LCD module is ILI9341
@@ -34,14 +35,16 @@
  * Version:
  *     0.1 > Basic menu with four screens (no image)
  *     0.2 > Basic menu with four screens with image
+ *     0.3 > Migrating to VSCode + PlatformIO
  *     
- * Last modified: 10.11.2019
+ * Last modified: 06.06.2020
  *******************************/
 
+#include <Arduino.h>
 #include <UTFT.h>
 #include <URTouch.h>
 
-#include "statusbar.h"
+#include "window/statusbar.h"
 
 // Initialize display
 // ------------------

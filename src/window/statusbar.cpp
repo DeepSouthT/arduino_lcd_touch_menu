@@ -14,7 +14,7 @@
  * Last modified: 04.06.2020
  *******************************/
 
- #include "statusbar.h"
+ #include "window/statusbar.h"
 
  void statusbar::drawStatusbar(void)
  {
