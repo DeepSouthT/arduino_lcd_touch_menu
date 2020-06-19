@@ -37,7 +37,7 @@
  *     0.2 > Basic menu with four screens with image
  *     0.3 > Migrating to VSCode + PlatformIO
  *     
- * Last modified: 06.06.2020
+ * Last modified: 15.06.2020
  *******************************/
 
 #include <Arduino.h>
@@ -45,6 +45,11 @@
 #include <URTouch.h>
 
 #include "window/statusbar.h"
+#include "window/navigationbar.h"
+#include "window/homeMenu.h"
+#include "window/tempMenu.h"
+#include "window/clockMenu.h"
+#include "window/currencyMenu.h"
 
 // Initialize display
 // ------------------
@@ -56,6 +61,11 @@ UTFT myGLCD(ITDB32S_V2, 38, 39, 40, 41);
 URTouch  myTouch( 6, 5, 4, 3, 2);
 
 statusbar statusbar_obj(myGLCD);
+navigationbar navigationbar_obj(myGLCD, myTouch);
+homemenu homemenu_obj(myGLCD);
+tempmenu tempmenu_obj(myGLCD);
+clockmenu clockmenu_obj(myGLCD);
+currencymenu currencymenu_obj(myGLCD);
 
 // Declare which fonts we will be using
 extern uint8_t BigFont[];
@@ -64,19 +74,6 @@ extern uint8_t SevenSegNumFont[];
 // Variables for the touch coordinates
 int x_touch, y_touch;
 
-// Icon
-extern unsigned int arrowHeadR[0x23F];
-extern unsigned int arrowHeadL[0x23F];
-extern unsigned int house[0x866];
-extern unsigned int temp_icon[0x1254];
-extern unsigned int clockNeedle[0x9C4];
-extern unsigned int doller[0x834];
-extern unsigned int semicolon[0x172];
-extern unsigned int centigrade[0x60C];
-extern unsigned int german[0xB6C];
-extern unsigned int canada[0xB41];
-extern unsigned int settings[0xAF9];
-
 /*************************
 **   Custom functions   **
 *************************/
@@ -84,139 +81,30 @@ extern unsigned int settings[0xAF9];
 // Function for drawing initial static areas
 void initStaticArea(void)
 {
-  statusbar_obj.drawStatusbar();
-
-  myGLCD.setColor(VGA_BLACK);
-  myGLCD.fillRect (0, 31, 319, 239);
-}
-
-// Function for clearing the complete menu area
-void clearMenuArea(void)
-{
-  myGLCD.setColor(VGA_BLACK);
-  myGLCD.fillRect (0, 31, 319, 179);
-}
-
-// Function for drawing right button
-void rightButton()
-{
-  myGLCD.setColor(255, 255, 255);
-  myGLCD.drawRoundRect (228, 180, 310, 230);
-  myGLCD.drawBitmap(265, 194, 25, 23, arrowHeadR);
-
-  myGLCD.setColor(10, 116, 255);
-  myGLCD.fillRect (240, 200, 265, 210);
-}
-
-// Function for drawing left button
-void leftButton()
-{
-  myGLCD.setColor(255, 255, 255);
-  myGLCD.drawRoundRect (10, 180, 92, 230);
-  myGLCD.drawBitmap(25, 194, 25, 23, arrowHeadL);
-
-  myGLCD.setColor(10, 116, 255);
-  myGLCD.fillRect (50, 200, 75, 210);
-}
-
-// Function for drawing red button outline during the butten is pressed
-void rightRedButton()
-{
-  myGLCD.setColor(255, 0, 0);
-  myGLCD.drawRoundRect (228, 180, 310, 230);
-  delay(150);
-  while (myTouch.dataAvailable())
-  {
-    myTouch.read();
-  }
-  myGLCD.setColor(255, 255, 255);
-  myGLCD.drawRoundRect (228, 180, 310, 230);
-}
-
-// Function for drawing red button outline during the butten is pressed
-void leftRedButton()
-{
-  myGLCD.setColor(255, 0, 0);
-  myGLCD.drawRoundRect (10, 180, 92, 230);
-  delay(150);
-  while (myTouch.dataAvailable())
-  {
-    myTouch.read();
-  }
-  myGLCD.setColor(255, 255, 255);
-  myGLCD.drawRoundRect (10, 180, 92, 230);
-}
-
-// Function for drawing settings button
-void settingsButton()
-{
-  myGLCD.setColor(255, 255, 255);
-  myGLCD.drawRoundRect (165, 180, 267, 230);
-  myGLCD.drawBitmap(195, 190, 53, 53, settings);
-
-  // myGLCD.setColor(10, 116, 255);
-  // myGLCD.fillRect (187, 200, 205, 210);
+  statusbar_obj.clearStatusbar();
+  navigationbar_obj.clearNavigationbar();
+  
+  navigationbar_obj.drawNavigationbar();
 }
 
 void homeScreen()
 {
-  clearMenuArea();
-  
-  myGLCD.setColor(VGA_WHITE);
-  myGLCD.setBackColor(VGA_BLACK);
-  myGLCD.setFont(SevenSegNumFont);
-  myGLCD.print("10", 130, 55);
-  myGLCD.drawBitmap(200, 60, 10, 37, semicolon);
-  myGLCD.print("10", 209, 55);
-
-  myGLCD.setFont(BigFont);
-  myGLCD.print("01.10.2019", 130, 120);
-
-  myGLCD.setColor(VGA_BLACK);
-  myGLCD.fillRect (10, 70, 79, 138);
-  myGLCD.drawBitmap(20, 85, 50, 43, house);
+  homemenu_obj.drawMenu();
 }
 
 void tempScreen()
 {
-  clearMenuArea();
-  
-  myGLCD.drawBitmap(10, 70, 69, 68, temp_icon);
-
-  myGLCD.setColor(VGA_BLACK);
-  myGLCD.fillRect (85, 31, 319, 179);
-
-  myGLCD.setColor(VGA_WHITE);
-  myGLCD.setBackColor(VGA_BLACK);
-  myGLCD.setFont(SevenSegNumFont);
-  myGLCD.print("22", 130, 55);
-  myGLCD.drawBitmap(200, 60, 36, 43, centigrade);
+  tempmenu_obj.drawMenu();
 }
 
 void clockScreen()
 {
-  clearMenuArea();
-  
-  myGLCD.drawBitmap(20, 80, 50, 50, clockNeedle);
-
-  myGLCD.setColor(VGA_BLACK);
-  myGLCD.fillRect (85, 31, 319, 179);
-
-  myGLCD.drawBitmap(130, 55, 68, 43, german);
-  myGLCD.setColor(VGA_WHITE);
-  myGLCD.setBackColor(VGA_BLACK);
-  myGLCD.setFont(BigFont);
-  myGLCD.print("XX", 210, 60);
-
-  myGLCD.drawBitmap(130, 120, 67, 43, canada);
-  myGLCD.print("XX", 210, 120);
+  clockmenu_obj.drawMenu();
 }
 
 void currencyScreen()
 {
-  clearMenuArea();
-  
-  myGLCD.drawBitmap(28, 75, 35, 60, doller);
+  currencymenu_obj.drawMenu();
 }
 
 // Collection of all screens
@@ -285,12 +173,7 @@ void setup() {
   initStaticArea();
   
   // Start screen
-  homeScreen();
-
-  // Static screen areas
-  rightButton();
-  settingsButton();
-  leftButton();
+  homemenu_obj.drawMenu();
 }
 
 void loop() {
@@ -304,15 +187,21 @@ void loop() {
       if((y_touch > 180) && (y_touch < 230)) // Lower buttons
       {
         
-        if((x_touch > 10) && (x_touch < 150)) // Left button
+        if((x_touch > 10) && (x_touch < 113)) // Left button
         {
-          leftRedButton();
+          navigationbar_obj.leftRedButton();
           stateChange(0);
           stateActive();
         }
-        else if((x_touch > 170) && (x_touch < 310)) // Right button
+        else if((x_touch > 114) && (x_touch < 226)) // Settings button
         {
-          rightRedButton();
+          navigationbar_obj.settingsRedButton();
+          //stateChange(1);
+          //stateActive();
+        }
+        else if((x_touch > 227) && (x_touch < 339)) // Right button
+        {
+          navigationbar_obj.rightRedButton();
           stateChange(1);
           stateActive();
         }

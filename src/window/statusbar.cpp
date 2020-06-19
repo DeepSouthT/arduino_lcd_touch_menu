@@ -1,5 +1,5 @@
 /*******************************
- * statusbar.c
+ * statusbar.cpp
  *
  * Created: 01.06.2020 21:48:00
  * Author : DeepSouthT
@@ -18,9 +18,12 @@
 
  void statusbar::drawStatusbar(void)
  {
-  statusbarGLCD.setColor(VGA_SILVER);
+  statusbarGLCD.setColor(default_colour);
   statusbarGLCD.fillRect (0, 0, 319, 30);
-  statusbarGLCD.setBackColor(VGA_SILVER);
-  statusbarGLCD.setColor(VGA_BLACK);
  }
  
+ void statusbar::clearStatusbar(void)
+ {
+  statusbarGLCD.setColor(default_colour);
+  statusbarGLCD.fillRect(window_sx, window_sy, window_ex, window_ey);
+ }

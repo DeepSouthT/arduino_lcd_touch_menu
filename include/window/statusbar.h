@@ -28,8 +28,17 @@ class statusbar
   //ToDo: return a status
   void drawStatusbar(void);
 
+  void clearStatusbar(void);
+
   private:
   UTFT& statusbarGLCD;
+
+  /// Static configuration
+  const uint16_t window_sx = 0;
+  const uint16_t window_sy = 0;
+  const uint16_t window_ex = 319;
+  const uint16_t window_ey = 30;
+  const uint16_t default_colour = VGA_SILVER;
   
 };
 
