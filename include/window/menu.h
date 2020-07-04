@@ -17,6 +17,7 @@
 #define __MENU_H__
 
 #include <UTFT.h>
+#include "window/globalConfig.h"
 
 class menu
 {

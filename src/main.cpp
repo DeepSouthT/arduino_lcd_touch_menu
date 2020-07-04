@@ -37,12 +37,14 @@
  *     0.2 > Basic menu with four screens with image
  *     0.3 > Migrating to VSCode + PlatformIO
  *     
- * Last modified: 15.06.2020
+ * Last modified: 09.07.2020
  *******************************/
 
 #include <Arduino.h>
 #include <UTFT.h>
 #include <URTouch.h>
+
+#include "window/globalConfig.h"
 
 #include "window/statusbar.h"
 #include "window/navigationbar.h"
@@ -74,6 +76,15 @@ extern uint8_t SevenSegNumFont[];
 // Variables for the touch coordinates
 int x_touch, y_touch;
 
+bool update_home_data = false;
+bool update_clock_data = false;
+bool update_currency_data = false;
+bool update_temp_data = false;
+
+struct Local_time_t local_time;
+uint8_t temperature = 22;
+//struct Currency_rate_t currency_rate;
+
 /*************************
 **   Custom functions   **
 *************************/
@@ -89,22 +100,22 @@ void initStaticArea(void)
 
 void homeScreen()
 {
-  homemenu_obj.drawMenu();
+  homemenu_obj.drawMenu(local_time);
 }
 
 void tempScreen()
 {
-  tempmenu_obj.drawMenu();
+  tempmenu_obj.drawMenu(temperature);
 }
 
 void clockScreen()
 {
-  clockmenu_obj.drawMenu();
+  clockmenu_obj.drawMenu(local_time);
 }
 
 void currencyScreen()
 {
-  currencymenu_obj.drawMenu();
+  currencymenu_obj.drawMenu(currencymenu_obj.currency_rate);
 }
 
 // Collection of all screens
@@ -147,6 +158,39 @@ void stateChange(int input)
   }
 }
 
+ISR(TIMER1_COMPA_vect)
+{
+  /// Time
+  if (local_time.loc_time_sec < 59)
+  {
+    local_time.loc_time_sec++;
+  } else {
+    local_time.loc_time_sec = 0;
+    if(local_time.loc_time_min < 59)
+    {
+      local_time.loc_time_min++;
+    } else {
+      local_time.loc_time_min = 0;
+      if(local_time.loc_time_hr < 23)
+      {
+        local_time.loc_time_hr++;
+      } else { local_time.loc_time_hr = 0;}
+    }
+  }
+
+  /// Temperature
+  if(local_time.loc_time_sec == 30)
+  {
+    temperature = 31;
+  } else {
+    temperature = 28;
+  }
+
+  update_home_data = true;
+  update_clock_data = true;
+  update_temp_data = true;
+}
+
 /*************************
 **  Required functions  **
 *************************/
@@ -156,6 +200,28 @@ void setup() {
   // initialize serial communication at 9600 bits per second:
   Serial.begin(9600);
   Serial.println("Started");
+
+  currencymenu_obj.currency_rate.euro_de_rate = 55;
+  currencymenu_obj.currency_rate.doller_ca_rate = 44;
+
+  //stop interrupts
+  cli();
+
+  //set timer1 interrupt at 1Hz
+  TCCR1A = 0;// set entire TCCR1A register to 0
+  TCCR1B = 0;// same for TCCR1B
+  TCNT1  = 0;//initialize counter value to 0
+  // set compare match register for 1hz increments
+  OCR1A = 15624;// = (16*10^6) / (1*1024) - 1 (must be <65536)
+  // turn on CTC mode
+  TCCR1B |= (1 << WGM12);
+  // Set CS12 and CS10 bits for 1024 prescaler
+  TCCR1B |= (1 << CS12) | (1 << CS10);  
+  // enable timer compare interrupt
+  TIMSK1 |= (1 << OCIE1A);
+
+  //allow interrupts
+  sei();
   
   // Initial setup
   myGLCD.InitLCD();
@@ -173,7 +239,7 @@ void setup() {
   initStaticArea();
   
   // Start screen
-  homemenu_obj.drawMenu();
+  homemenu_obj.drawMenu(local_time);
 }
 
 void loop() {
@@ -210,4 +276,22 @@ void loop() {
         }
        }
      }
+
+  if ((update_home_data)&&(stateActiveIndex == 0))
+  {
+    homemenu_obj.deawTime(local_time);
+    update_home_data = false;
+  } else if ((update_temp_data)&&(stateActiveIndex == 1))
+  {
+    tempmenu_obj.drawTemp(temperature);
+    update_temp_data = false;
+  } else if ((update_clock_data)&&(stateActiveIndex == 2))
+  {
+    update_clock_data = false;
+    clockmenu_obj.deawTime(local_time);
+  } else if ((update_currency_data)&&(stateActiveIndex == 3))
+  {
+    update_currency_data = false;
+    currencymenu_obj.drawCurrency(currencymenu_obj.currency_rate);
+  }
 }

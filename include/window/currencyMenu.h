@@ -11,7 +11,7 @@
  *     Currency menu
  *     This includes all its configurations
  *
- * Last modified: 19.06.2020
+ * Last modified: 09.07.2020
  *******************************/
 
 #ifndef __CURRENCYMENU_H__
@@ -34,12 +34,19 @@ class currencymenu : menu
   currencymenu(UTFT& currencymenuGLCD_): currencymenuGLCD(currencymenuGLCD_){};
   ~currencymenu(){};
 
-  void drawMenuHead(void);
+  /// Currency rates
+  struct Currency_rate_t {
+      uint8_t euro_de_rate;
+      uint8_t doller_ca_rate;
+  } currency_rate;
 
-  void drawMenuData(void);
+  void drawMenuHead(void);
+  void drawCurrency(Currency_rate_t currency_rate);
+
+  void drawMenuData(Currency_rate_t currency_rate);
 
   //ToDo: return a status
-  void drawMenu(void);
+  void drawMenu(Currency_rate_t currency_rate);
 
   private:
   UTFT& currencymenuGLCD;

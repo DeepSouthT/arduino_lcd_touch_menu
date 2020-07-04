@@ -35,10 +35,12 @@ class tempmenu : menu
 
   void drawMenuHead(void);
 
-  void drawMenuData(void);
+  void drawTemp(uint8_t temp);
+
+  void drawMenuData(uint8_t temp);
 
   //ToDo: return a status
-  void drawMenu(void);
+  void drawMenu(uint8_t temp);
 
   private:
   UTFT& tempmenuGLCD;

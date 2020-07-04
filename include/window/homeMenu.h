@@ -11,7 +11,7 @@
  *     Home menu
  *     This includes all its configurations
  *
- * Last modified: 19.06.2020
+ * Last modified: 21.06.2020
  *******************************/
 
 #ifndef __HOMEMENU_H__
@@ -34,11 +34,12 @@ class homemenu : menu
   ~homemenu(){};
 
   void drawMenuHead(void);
+  void deawTime(Local_time_t local_time);
 
-  void drawMenuData(void);
+  void drawMenuData(Local_time_t local_time);
 
   //ToDo: return a status
-  void drawMenu(void);
+  void drawMenu(Local_time_t local_time);
 
   private:
   UTFT& homemenuGLCD;
